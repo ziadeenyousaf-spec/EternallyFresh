@@ -19,7 +19,7 @@ function Name_format(name){//checks if parameter name is in right format - also 
 function password_format(password){//checks if parameter password follows rules for a password - does not stop sql injection
     let contLet=false; // flag of whether password contains letters
     let contNum=false; // flag of whether password contains numbers
-    let contSym=false; // flag of whether password contains letters
+    let contSym=false; // flag of whether password contains symbols
     let passLength=password.length; //needed so each iteration is not checking length and instead checking this variable
     if (passLength<8){//if password is under 8 characters
         return false// passwords is to be rejected
@@ -29,7 +29,7 @@ function password_format(password){//checks if parameter password follows rules 
             contLet=true;
         }else if (curAscii<=57 && curAscii>=48) { // character is a number
             contNum=true;
-        }else if (curAscii<127 && curAscii>32) { //character is a symbol – any other ascii value that is a character
+        }else if ((curAscii<48 && curAscii>32)||(curAscii>57 && curAscii<65)||(curAscii>90 && curAscii<97)||(curAscii>122)) { //character is a symbol – any other ascii value that is a character
             contSym=true;
         }
     }if (contLet==true && contNum==true && contSym==true) { // contains letters numbers and symbols
@@ -39,10 +39,10 @@ function password_format(password){//checks if parameter password follows rules 
     }
 }   
 
-function isSearchTermInArray(item,array){
-    let arrayLen=array.length;//needed so length isnt checked every iteration
-    for (let i=0;i<arrayLen;i++){//iterates through every item in array
-        if (item==array[i]){//if item is item in array
+function isSearchTermInJSON(item,rowName,json){
+    let jsonLen=json.length;//needed so length isnt checked every iteration
+    for (let i=0;i<jsonLen;i++){//iterates through every item in array
+        if (item==json[i][rowName]){//if item is item in array
             return i;//return index in array
         }
     }return -1; //if not in array 
@@ -111,4 +111,4 @@ function date_correct(input) {//returns false if not a date
 
 
 
-module.exports={Name_format,password_format,isSearchTermInArray,sqlInjectionCheck,isBanned,ema_correct,date_correct}
+module.exports={Name_format,password_format,isSearchTermInJSON,sqlInjectionCheck,isBanned,ema_correct,date_correct}
