@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en"><!--Add settings button-->
+    <head>
+        <title>Front Page</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+    </head>
+<style>
+   .Redirect{
+	background-color: white;
+	border: 1px solid black;
+	height: 10vh;
+	width: 40vw;
+    font-size:larger;
+}
+</style>
+    <body>
+        <div id="sessionExpired" style="color: red;"></div>
+        <div style="text-align: center;">
+            <h1>Welcome to <i>Testing company</i></h1>
+            <h2>Are you an Customer or Moderator?</h2>
+            <br><br><a href="/Customer/LogIn"><input type="button" class="Redirect" value="Customer"></a><!--Redirects to the customer login path-->
+            <br><br><br>
+            <a href="/Moderator/LogIn"><input type="button" class="Redirect" value="Moderator"></a> <!--Redirects to the moderator login path -->
+        </div>
+    </body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Log In</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <style>
+        .flex-container{
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="flex-container">
+            <div>
+                <h1>Enter your Log In Details</h1>
+                <h3>Log in</h3>
+                <div id="errorMessage" style="color: red; display:contents; font-weight: bold;"></div>
+                <form id="accountAccessInfo" name="logInInfo" action="/Moderator/LogIn" method="post">
+                    <label for="username">Username:</label><br>
+                    <input type="text" id="username" name="username" required><br><br>
+                    <label for="password">Password:</label><br>
+                    <input type="password" id="password" name="password" required><br><br>
+                    <input type="submit" placeholder="Log in">
+                </form>
+            </div>
+            <div class="vertLine"></div>
+        </div>
+        <script>
+            //get query parameters if there is an expired session or login error
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('message');
+            
+            //if there is a session expired message or login error
+            if (message){
+            const messageDiv = document.getElementById('errorMessage');
+            messageDiv.textContent= message;
+            messageDiv.style.display = 'block'; // Show the message div if there is a message
+            }
+        </script>
+    </body>
+</html>

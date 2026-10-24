@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Sign Up</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <style>
+        .flex-container{
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .vertLine{
+            border-left: 1px solid;
+            height: 100%;
+            position: absolute;
+            left: 50%;
+            top: 0;
+        }
+        .LogIn{
+            display: flex;
+            justify-content: center;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="flex-container">
+            <div class="SignUp">
+                <h1>For new customers</h1>
+                <h3>Sign Up</h3>
+                <form id="accountAccessInfo" name="signUpInfo" action="/Customer/SignUp" method="post">
+                    <label for="username">Username:</label><br>
+                    <input type="text" id="username" name="username" required><br><br>
+                    <label for="forename">Forename:</label><br>
+                    <input type="text" id="forename" name="forename" required><br><br>
+                    <label for="surname">Surname:</label><br>
+                    <input type="text" id="surname" name="surname" required><br><br>
+                    <label for="email">Email:</label><br>
+                    <input type="email" id="email" name="email" required><br><br>
+                    <label for="password">Password:</label><br>
+                    <input type="password" id="password" name="password" required><br><br>
+                    <label for="repassword">Re-confirm password:</label><br>
+                    <input type="password" id="repassword" name="repassword" required><br><br>
+                    <p>Sex:</p>
+                    <input type="radio" id="male" name="custSex" value="Male" required>
+                    <label for="male">Male</label>
+                    <input type="radio" id="female" name="custSex" value="Female">
+                    <label for="female">Female</label>
+                    <input type="radio" id="other" name="custSex" value="Other">
+                    <label for="other">Other</label>
+                    <input type="radio" id="pnts" name="custSex" value="Prefer not to say">
+                    <label for="pnts">Prefer not to say</label><br><br>
+                    <label for="DOB">Date Of Birth:</label><br>
+                    <input type="date" id="DOB" name="custDateOfBirth" required>
+                    <br><br><input type="submit" placeholder="Sign Up">
+                </form>
+            </div>
+            <div class="vertLine"></div>
+            <div>
+                <p><b>For those who already have an account</b></p>
+                <div class="LogIn">
+                    <a href="/Customer/LogIn"><input type="button" value="Log In"></a>
+                </div>
+            </div>
+        </div>
+        <!--Settings to be added-->
+        <script>
+            const urlParams = new URLSearchParams(window.location.search);
+            const errorsParam = urlParams.get('errors');
+
+            if (errorsParam) {
+                const errors = JSON.parse(decodeURIComponent(errorsParam));
+                let message = "These errors were found in the Sign Up information you gave:\n\n";
+                errors.forEach((err, index) => {
+                    message += `${index + 1}. ${err}\n`;
+            });
+                alert(message); // popup with all errors
+            }
+        </script>
+    </body>
+</html>
