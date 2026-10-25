@@ -1,27 +1,117 @@
 <!DOCTYPE html>
-<html lang="en"><!--Add settings button-->
+<html lang="en">
     <head>
         <title>Front Page</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="UTF-8">
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                display: flex;
+                min-height: 100vh;
+                align-items: center;
+                justify-content: center;
+                margin: 0;
+                padding: 1.5rem;
+                color: #30204f;
+                background:
+                    radial-gradient(ellipse at 12% 8%, rgb(255 255 255 / 90%), transparent 22rem),
+                    radial-gradient(ellipse at 85% 25%, rgb(255 128 215 / 28%), transparent 25rem),
+                    linear-gradient(135deg, #d7f9ff 0%, #f8e3ff 48%, #fff1c8 100%);
+                background-attachment: fixed;
+                font-family: "Trebuchet MS", Arial, sans-serif;
+            }
+            .welcome-card {
+                width: min(680px, 100%);
+                padding: clamp(1.5rem, 6vw, 3rem);
+                border: 2px solid #fff;
+                border-radius: 32px;
+                background: linear-gradient(145deg, rgb(255 255 255 / 92%), rgb(235 249 255 / 88%));
+                box-shadow: 7px 8px 0 #b786e2, 0 0 24px rgb(255 255 255 / 70%);
+                text-align: center;
+            }
+            .brand-logo {
+                display: block;
+                width: min(250px, 75%);
+                height: auto;
+                max-height: 220px;
+                margin: 0 auto 0.75rem;
+                border: 2px solid #fff;
+                border-radius: 28px;
+                background: rgb(255 255 255 / 75%);
+                box-shadow: 4px 5px 0 #c49be5, 0 0 18px rgb(255 255 255 / 75%);
+                object-fit: contain;
+            }
+            h1 {
+                margin: 1rem 0 0.5rem;
+                color: #542778;
+                font-size: clamp(1.8rem, 6vw, 2.6rem);
+                text-shadow: 1px 1px 0 #fff;
+            }
+            h2 {
+                margin: 0 0 1.75rem;
+                color: #287486;
+                font-size: clamp(1.1rem, 4vw, 1.4rem);
+            }
+            #sessionExpired:not(:empty) {
+                margin-bottom: 1rem;
+                padding: 0.75rem 1rem;
+                border: 1px solid #ff9ab6;
+                border-radius: 14px;
+                background: #fff0f4;
+                color: #9a2450;
+                font-weight: 700;
+            }
+            .role-links {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 1rem;
+            }
+            .Redirect {
+                display: flex;
+                min-height: 64px;
+                align-items: center;
+                justify-content: center;
+                padding: 0.85rem 1rem;
+                border: 2px solid #fff;
+                border-radius: 999px;
+                background: linear-gradient(100deg, #ff9bdc, #d7a9ff 55%, #8ceeff);
+                box-shadow: 4px 5px 0 #9b6bc9;
+                color: #39235f;
+                font-size: 1.2rem;
+                font-weight: 700;
+                text-decoration: none;
+                transition: transform 150ms ease, filter 150ms ease;
+            }
+            .Redirect:hover,
+            .Redirect:focus-visible {
+                filter: brightness(1.05);
+                transform: translateY(-2px);
+            }
+            @media (max-width: 500px) {
+                .role-links {
+                    grid-template-columns: 1fr;
+                }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .Redirect {
+                    transition: none;
+                }
+            }
+        </style>
     </head>
-<style>
-   .Redirect{
-	background-color: white;
-	border: 1px solid black;
-	height: 10vh;
-	width: 40vw;
-    font-size:larger;
-}
-</style>
     <body>
-        <div id="sessionExpired" style="color: red;"></div>
-        <div style="text-align: center;">
-            <h1>Welcome to <i>Testing company</i></h1>
+        <main class="welcome-card">
+            <div id="sessionExpired" role="alert"></div>
+            <img class="brand-logo" src="/logo.png" alt="Eternally Fresh">
+            <h1>Welcome to <i>Eternally Fresh</i></h1>
             <h2>Are you an Customer or Moderator?</h2>
-            <br><br><a href="/Customer/LogIn"><input type="button" class="Redirect" value="Customer"></a><!--Redirects to the customer login path-->
-            <br><br><br>
-            <a href="/Moderator/LogIn"><input type="button" class="Redirect" value="Moderator"></a> <!--Redirects to the moderator login path -->
-        </div>
+            <div class="role-links">
+                <a href="/Customer/LogIn" class="Redirect">Customer</a>
+                <a href="/Moderator/LogIn" class="Redirect">Moderator</a>
+            </div>
+        </main>
     </body>
 </html>

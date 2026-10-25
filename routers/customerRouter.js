@@ -74,6 +74,11 @@ router.get('/LogIn',(req,res) => {//add expired login message
     res.sendFile(path.join(__dirname,"../clientSide","CustomerLogIn.html"));
 })
 
+router.get('/LogOut', (req, res) => {
+    res.clearCookie('customerID');
+    res.redirect('/Customer/LogIn');
+});
+
 router.get('/Home',(req,res) => {
     res.sendFile(path.join(__dirname,"../clientSide","CustomerHome.html"));
 });

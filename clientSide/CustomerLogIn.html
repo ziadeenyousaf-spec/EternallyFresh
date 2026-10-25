@@ -5,47 +5,167 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="UTF-8">
         <style>
-        .flex-container{
-            display: flex;
-            flex-flow: row wrap;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-        .vertLine{
-            border-left: 1px solid;
-            height: 100%;
-            position: absolute;
-            left: 50%;
-            top: 0;
-        }
-        .SignUp{
-            display: flex;
-            justify-content: center;
-        }
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                display: flex;
+                min-height: 100vh;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                margin: 0;
+                padding: 2rem;
+                color: #30204f;
+                background:
+                    radial-gradient(ellipse at 12% 8%, rgb(255 255 255 / 90%), transparent 22rem),
+                    radial-gradient(ellipse at 85% 25%, rgb(255 128 215 / 28%), transparent 25rem),
+                    linear-gradient(135deg, #d7f9ff 0%, #f8e3ff 48%, #fff1c8 100%);
+                background-attachment: fixed;
+                font-family: "Trebuchet MS", Arial, sans-serif;
+            }
+            .brand {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+                color: #4a2670;
+                font-size: clamp(1.35rem, 5vw, 2rem);
+                font-weight: 700;
+                text-shadow: 1px 1px 0 #fff;
+            }
+            .brand img {
+                width: 88px;
+                height: 88px;
+                border: 2px solid #fff;
+                border-radius: 50%;
+                background: rgb(255 255 255 / 72%);
+                box-shadow: 3px 4px 0 #b786e2, 0 0 18px rgb(255 255 255 / 75%);
+                object-fit: contain;
+            }
+            .flex-container {
+                display: grid;
+                width: min(900px, 100%);
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 1.5rem;
+            }
+            .panel {
+                min-width: 0;
+                padding: clamp(1.25rem, 4vw, 2rem);
+                border: 2px solid #fff;
+                border-radius: 26px;
+                background: linear-gradient(145deg, rgb(255 255 255 / 92%), rgb(235 249 255 / 88%));
+                box-shadow: 6px 7px 0 #b786e2, 0 0 20px rgb(255 255 255 / 65%);
+            }
+            h1 {
+                margin: 0 0 0.5rem;
+                color: #542778;
+                font-size: clamp(1.4rem, 3vw, 1.8rem);
+            }
+            h3 {
+                margin: 0 0 1.25rem;
+                color: #287486;
+            }
+            .vertLine {
+                display: none;
+            }
+            #accountAccessInfo label {
+                display: inline-block;
+                margin-bottom: 0.4rem;
+                color: #432967;
+                font-weight: 700;
+            }
+            #accountAccessInfo input[type="text"],
+            #accountAccessInfo input[type="password"] {
+                width: 100%;
+                min-height: 46px;
+                padding: 0.7rem 0.85rem;
+                border: 2px solid #d4b6ef;
+                border-radius: 14px;
+                background: rgb(255 255 255 / 85%);
+                color: #30204f;
+                font: inherit;
+            }
+            #accountAccessInfo input:focus-visible {
+                border-color: #8a5bc0;
+                outline: 3px solid rgb(142 223 255 / 65%);
+                outline-offset: 2px;
+            }
+            #errorMessage {
+                display: none;
+                margin: 0.5rem 0 1rem;
+                padding: 0.75rem;
+                border: 1px solid #ff9ab6;
+                border-radius: 12px;
+                background: #fff0f4;
+                color: #9a2450;
+                font-weight: 700;
+            }
+            .SignUp {
+                display: flex;
+                justify-content: center;
+                margin-top: 1.5rem;
+            }
+            .action-button {
+                min-height: 46px;
+                padding: 0.7rem 1.25rem;
+                border: 2px solid #fff;
+                border-radius: 999px;
+                background: linear-gradient(100deg, #ff9bdc, #d7a9ff 55%, #8ceeff);
+                box-shadow: 3px 4px 0 #9b6bc9;
+                color: #39235f;
+                cursor: pointer;
+                font: inherit;
+                font-weight: 700;
+                text-decoration: none;
+            }
+            .action-button:hover,
+            .action-button:focus-visible {
+                filter: brightness(1.05);
+                transform: translateY(-1px);
+            }
+            @media (max-width: 650px) {
+                body {
+                    justify-content: flex-start;
+                    padding: 1.25rem;
+                }
+                .flex-container {
+                    grid-template-columns: 1fr;
+                    gap: 1.25rem;
+                }
+                .brand img {
+                    width: 72px;
+                    height: 72px;
+                }
+            }
         </style>
     </head>
     <body>
+        <div class="brand">
+            <img src="/logo.png" alt="Eternally Fresh logo">
+            <span>Eternally Fresh</span>
+        </div>
         <div class="flex-container">
-            <div>
+            <section class="panel">
                 <h1>For returning customers</h1>
                 <h3>Log in</h3>
-                <div id="errorMessage" style="color: red; display:contents; font-weight: bold;"></div>
+                <div id="errorMessage"></div>
                 <form id="accountAccessInfo" name="logInInfo" action="/Customer/LogIn" method="post">
                     <label for="username">Username/Email:</label><br>
                     <input type="text" id="username" name="username" required><br><br>
                     <label for="password">Password:</label><br>
                     <input type="password" id="password" name="password" required><br><br>
-                    <input type="submit" placeholder="Log in">
+                    <input class="action-button" type="submit" value="Log in">
                 </form>
-            </div>
+            </section>
             <div class="vertLine"></div>
-            <div>
+            <section class="panel">
                 <h1>For new customers</h1>
                 <p>You must have an account to access the website.</p>
                 <div class="SignUp">
-                    <a href="/Customer/SignUp"><input type="button" value="Sign Up"></a>
+                    <a class="action-button" href="/Customer/SignUp">Sign Up</a>
                 </div>
-            </div>
+            </section>
         </div>
         <script>
             //get query parameters if there is an expired session or login error

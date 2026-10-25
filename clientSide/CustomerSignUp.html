@@ -5,64 +5,202 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="UTF-8">
         <style>
-        .flex-container{
-            display: flex;
-            flex-flow: row wrap;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .vertLine{
-            border-left: 1px solid;
-            height: 100%;
-            position: absolute;
-            left: 50%;
-            top: 0;
-        }
-        .LogIn{
-            display: flex;
-            justify-content: center;
-        }
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                display: flex;
+                min-height: 100vh;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                margin: 0;
+                padding: 2rem;
+                color: #30204f;
+                background:
+                    radial-gradient(ellipse at 12% 8%, rgb(255 255 255 / 90%), transparent 22rem),
+                    radial-gradient(ellipse at 85% 25%, rgb(255 128 215 / 28%), transparent 25rem),
+                    linear-gradient(135deg, #d7f9ff 0%, #f8e3ff 48%, #fff1c8 100%);
+                background-attachment: fixed;
+                font-family: "Trebuchet MS", Arial, sans-serif;
+            }
+            .brand {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+                color: #4a2670;
+                font-size: clamp(1.35rem, 5vw, 2rem);
+                font-weight: 700;
+                text-shadow: 1px 1px 0 #fff;
+            }
+            .brand img {
+                width: 88px;
+                height: 88px;
+                border: 2px solid #fff;
+                border-radius: 50%;
+                background: rgb(255 255 255 / 72%);
+                box-shadow: 3px 4px 0 #b786e2, 0 0 18px rgb(255 255 255 / 75%);
+                object-fit: contain;
+            }
+            .flex-container {
+                display: grid;
+                width: min(720px, 100%);
+                grid-template-columns: minmax(0, 1fr) minmax(220px, 0.65fr);
+                align-items: stretch;
+                gap: 1.5rem;
+            }
+            .panel {
+                min-width: 0;
+                padding: clamp(1.25rem, 4vw, 2rem);
+                border: 2px solid #fff;
+                border-radius: 26px;
+                background: linear-gradient(145deg, rgb(255 255 255 / 92%), rgb(235 249 255 / 88%));
+                box-shadow: 6px 7px 0 #b786e2, 0 0 20px rgb(255 255 255 / 65%);
+            }
+            h1 {
+                margin: 0 0 0.5rem;
+                color: #542778;
+                font-size: clamp(1.4rem, 3vw, 1.8rem);
+            }
+            h3 {
+                margin: 0 0 1.25rem;
+                color: #287486;
+            }
+            .vertLine {
+                display: none;
+            }
+            #accountAccessInfo label {
+                color: #432967;
+                font-weight: 700;
+            }
+            #accountAccessInfo input[type="text"],
+            #accountAccessInfo input[type="email"],
+            #accountAccessInfo input[type="password"],
+            #accountAccessInfo input[type="date"] {
+                width: 100%;
+                min-height: 44px;
+                padding: 0.65rem 0.8rem;
+                border: 2px solid #d4b6ef;
+                border-radius: 14px;
+                background: rgb(255 255 255 / 85%);
+                color: #30204f;
+                font: inherit;
+            }
+            #accountAccessInfo input:focus-visible {
+                border-color: #8a5bc0;
+                outline: 3px solid rgb(142 223 255 / 65%);
+                outline-offset: 2px;
+            }
+            .sex-options {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.65rem 1rem;
+                margin: 0.65rem 0 1rem;
+            }
+            #accountAccessInfo .sex-options label {
+                font-weight: 400;
+            }
+            .submit-row,
+            .LogIn {
+                display: flex;
+                justify-content: center;
+                margin-top: 1.25rem;
+            }
+            .action-button {
+                display: inline-flex;
+                min-height: 46px;
+                align-items: center;
+                justify-content: center;
+                padding: 0.7rem 1.25rem;
+                border: 2px solid #fff;
+                border-radius: 999px;
+                background: linear-gradient(100deg, #ff9bdc, #d7a9ff 55%, #8ceeff);
+                box-shadow: 3px 4px 0 #9b6bc9;
+                color: #39235f;
+                cursor: pointer;
+                font: inherit;
+                font-weight: 700;
+                text-decoration: none;
+            }
+            .action-button:hover,
+            .action-button:focus-visible {
+                filter: brightness(1.05);
+                transform: translateY(-1px);
+            }
+            @media (max-width: 650px) {
+                body {
+                    justify-content: flex-start;
+                    padding: 1.25rem;
+                }
+                .flex-container {
+                    grid-template-columns: 1fr;
+                    gap: 1.25rem;
+                }
+                .brand img {
+                    width: 72px;
+                    height: 72px;
+                }
+            }
         </style>
     </head>
     <body>
+        <div class="brand">
+            <img src="/logo.png" alt="Eternally Fresh logo">
+            <span>Eternally Fresh</span>
+        </div>
         <div class="flex-container">
-            <div class="SignUp">
-                <h1>For new customers</h1>
-                <h3>Sign Up</h3>
-                <form id="accountAccessInfo" name="signUpInfo" action="/Customer/SignUp" method="post">
-                    <label for="username">Username:</label><br>
-                    <input type="text" id="username" name="username" required><br><br>
-                    <label for="forename">Forename:</label><br>
-                    <input type="text" id="forename" name="forename" required><br><br>
-                    <label for="surname">Surname:</label><br>
-                    <input type="text" id="surname" name="surname" required><br><br>
-                    <label for="email">Email:</label><br>
-                    <input type="email" id="email" name="email" required><br><br>
-                    <label for="password">Password:</label><br>
-                    <input type="password" id="password" name="password" required><br><br>
-                    <label for="repassword">Re-confirm password:</label><br>
-                    <input type="password" id="repassword" name="repassword" required><br><br>
-                    <p>Sex:</p>
-                    <input type="radio" id="male" name="custSex" value="Male" required>
-                    <label for="male">Male</label>
-                    <input type="radio" id="female" name="custSex" value="Female">
-                    <label for="female">Female</label>
-                    <input type="radio" id="other" name="custSex" value="Other">
-                    <label for="other">Other</label>
-                    <input type="radio" id="pnts" name="custSex" value="Prefer not to say">
-                    <label for="pnts">Prefer not to say</label><br><br>
-                    <label for="DOB">Date Of Birth:</label><br>
-                    <input type="date" id="DOB" name="custDateOfBirth" required>
-                    <br><br><input type="submit" placeholder="Sign Up">
-                </form>
-            </div>
+            <section class="panel SignUp">
+                <div>
+                    <h1>For new customers</h1>
+                    <h3>Sign Up</h3>
+                    <form id="accountAccessInfo" name="signUpInfo" action="/Customer/SignUp" method="post">
+                        <label for="username">Username:</label><br>
+                        <input type="text" id="username" name="username" required><br><br>
+                        <label for="forename">Forename:</label><br>
+                        <input type="text" id="forename" name="forename" required><br><br>
+                        <label for="surname">Surname:</label><br>
+                        <input type="text" id="surname" name="surname" required><br><br>
+                        <label for="email">Email:</label><br>
+                        <input type="email" id="email" name="email" required><br><br>
+                        <label for="password">Password:</label><br>
+                        <input type="password" id="password" name="password" required><br><br>
+                        <label for="repassword">Re-confirm password:</label><br>
+                        <input type="password" id="repassword" name="repassword" required><br><br>
+                        <p>Sex:</p>
+                        <div class="sex-options">
+                            <span>
+                                <input type="radio" id="male" name="custSex" value="Male" required>
+                                <label for="male">Male</label>
+                            </span>
+                            <span>
+                                <input type="radio" id="female" name="custSex" value="Female">
+                                <label for="female">Female</label>
+                            </span>
+                            <span>
+                                <input type="radio" id="other" name="custSex" value="Other">
+                                <label for="other">Other</label>
+                            </span>
+                            <span>
+                                <input type="radio" id="pnts" name="custSex" value="Prefer not to say">
+                                <label for="pnts">Prefer not to say</label>
+                            </span>
+                        </div>
+                        <label for="DOB">Date Of Birth:</label><br>
+                        <input type="date" id="DOB" name="custDateOfBirth" required>
+                        <div class="submit-row">
+                            <input class="action-button" type="submit" value="Sign Up">
+                        </div>
+                    </form>
+                </div>
+            </section>
             <div class="vertLine"></div>
-            <div>
+            <section class="panel">
                 <p><b>For those who already have an account</b></p>
                 <div class="LogIn">
-                    <a href="/Customer/LogIn"><input type="button" value="Log In"></a>
+                    <a class="action-button" href="/Customer/LogIn">Log In</a>
                 </div>
-            </div>
+            </section>
         </div>
         <!--Settings to be added-->
         <script>

@@ -1,47 +1,155 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <title>Home</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/navBar.css">
         <style>
-
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                padding: 2rem;
+                font-family: "Trebuchet MS", Arial, sans-serif;
+                color: #30204f;
+                background:
+                    radial-gradient(ellipse at 12% 8%, rgb(255 255 255 / 90%), transparent 22rem),
+                    radial-gradient(ellipse at 85% 25%, rgb(255 128 215 / 28%), transparent 25rem),
+                    linear-gradient(135deg, #d7f9ff 0%, #f8e3ff 48%, #fff1c8 100%);
+                background-attachment: fixed;
+            }
+            main {
+                max-width: 1100px;
+                margin: 0 auto;
+            }
+            h1 {
+                display: table;
+                margin: 1.75rem 0 1rem;
+                padding: 0.45rem 1.1rem;
+                border: 2px solid #fff;
+                border-radius: 999px;
+                background: linear-gradient(110deg, #ff9bdc, #d7a9ff 55%, #8ceeff);
+                box-shadow: 4px 5px 0 #9b6bc9, 0 0 18px rgb(255 255 255 / 80%);
+                color: #39235f;
+                font-size: clamp(1.35rem, 4vw, 2rem);
+                text-shadow: 1px 1px 0 #fff;
+            }
+            #soonToExpireFoods,
+            #recommendedRecipes {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 1rem;
+            }
+            #soonToExpireFoods > div,
+            #recommendedRecipes > div {
+                min-width: 0;
+                padding: 1rem;
+                border: 2px solid #fff;
+                border-radius: 22px;
+                background: linear-gradient(145deg, rgb(255 255 255 / 92%), rgb(235 249 255 / 88%));
+                box-shadow: 5px 6px 0 #b786e2, 0 0 18px rgb(255 255 255 / 65%);
+                text-align: center;
+            }
+            #soonToExpireFoods img,
+            #recommendedRecipes img {
+                display: block;
+                width: 100%;
+                height: 210px;
+                margin-bottom: 0.75rem;
+                border: 2px solid #fff;
+                border-radius: 16px;
+                background: linear-gradient(135deg, #d9faff, #ffe1f5);
+                object-fit: contain;
+                object-position: center;
+            }
+            #soonToExpireFoods p:first-of-type,
+            #recommendedRecipes p:first-of-type {
+                color: #642c91;
+                font-size: 1.1rem;
+                font-weight: 700;
+                overflow-wrap: anywhere;
+            }
+            #soonToExpireFoods p,
+            #recommendedRecipes p {
+                margin: 0.5rem 0 0;
+            }
+            #soonToExpireFoods p:last-child,
+            #recommendedRecipes p:last-child {
+                color: #287486;
+            }
+            @media (max-width: 650px) {
+                body {
+                    padding: 1rem;
+                }
+                #soonToExpireFoods,
+                #recommendedRecipes {
+                    grid-template-columns: 1fr;
+                }
+            }
         </style>
         <script src="/loadCustHome.js" defer></script>
+        <script src="/navBar.js" defer></script>
     </head>
     <body>
-        <h1>Soon to Expire</h1>
-        <div id="soonToExpireRecipes">
-            <div id="STER1">
-                <img id="foodPic1" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" alt="Loading..." />
-                <p id="foodName1">Name</p>
-                <p id="expiry1">Time till expiry : ---</p>
+        <button class="nav-toggle" type="button" aria-label="Open navigation" aria-controls="site-navigation" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="nav-backdrop" data-nav-close hidden></div>
+        <aside class="site-navigation" id="site-navigation" aria-label="Main navigation" aria-hidden="true">
+            <a class="nav-logo" href="/Customer/Home" aria-label="Eternally Fresh home">
+                <img class="nav-logo-image" src="/logo.png" alt="Eternally Fresh">
+                <span>Eternally Fresh</span>
+            </a>
+            <nav>
+                <a href="/Customer/Home">Home</a>
+                <a href="/Customer/EditItems">Edit Items</a>
+                <a href="/Customer/AddItem">Add New Items</a>
+                <a href="/Customer/SearchRecipes">Search Recipes</a>
+                <a href="/Customer/CreateRecipe">Create Recipes</a>
+                <a href="/Customer/LogOut">Logout</a>
+            </nav>
+        </aside>
+        <main>
+            <h1>Soon to Expire</h1>
+            <div id="soonToExpireFoods">
+                <div id="STEF1">
+                    <img id="foodPic1" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" alt="Loading..." />
+                    <p id="foodName1">Name</p>
+                    <p id="expiry1">Time till expiry : ---</p>
+                </div>
+                <div id="STEF2">
+                    <img id="foodPic2" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" alt="Loading..." />
+                    <p id="foodName2">Name</p>
+                    <p id="expiry2">Time till expiry : ---</p>
+                </div>
+                <div id="STEF3">
+                    <img id="foodPic3" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" alt="Loading..." />
+                    <p id="foodName3">Name</p>
+                    <p id="expiry3">Time till expiry : ---</p>
+                </div>
             </div>
-            <div id="STER2">
-                <img id="foodPic2" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" alt="Loading..." />
-                <p id="foodName2">Name</p>
-                <p id="expiry2">Time till expiry : ---</p>
+            <h1>Recommended Recipes</h1>
+            <div id="recommendedRecipes">
+                <div id="RR1">
+                    <img id="recipePic1" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" alt="Loading..." />
+                    <p id="recipeName1">Recipe 1</p>
+                    <p id="recipeTime1">Takes -- mins</p>
+                </div>
+                <div id="RR2">
+                    <img id="recipePic2" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" alt="Loading..." />
+                    <p id="recipeName2">Recipe 2</p>
+                    <p id="recipeTime2">Takes -- mins</p>
+                </div>
+                <div id="RR3">
+                    <img id="recipePic3" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" alt="Loading..." />
+                    <p id="recipeName3">Recipe 3</p>
+                    <p id="recipeTime3">Takes -- mins</p>
+                </div>
             </div>
-            <div id="STER3">
-                <img id="foodPic3" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" alt="Loading..." />
-                <p id="foodName3">Name</p>
-                <p id="expiry3">Time till expiry : ---</p>
-            </div>
-        </div>
-        <h1>Recommended Recipes</h1>
-        <div id="recommendedRecipes">
-            <div id="RR1"></div>
-                <img id="recipePic1" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" alt="Loading..." />
-                <p id="recipeName1">Recipe 1</p>
-                <p id="recipeTime1">Takes -- mins</p>
-            </div>
-            <div id="RR2"></div>
-                <img id="recipePic2" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" alt="Loading..." />
-                <p id="recipeName2">Recipe 2</p>
-                <p id="recipeTime2">Takes -- mins</p>
-            </div>
-            <div id="RR3"></div>
-                <img id="recipePic3" src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" alt="Loading..." />
-                <p id="recipeName3">Recipe 3</p>
-                <p id="recipeTime3">Takes -- mins</p>
-            </div>
-        </div>
+        </main>
     </body>
 </html>
