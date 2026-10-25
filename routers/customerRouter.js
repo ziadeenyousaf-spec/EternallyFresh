@@ -200,7 +200,7 @@ router.post('/LogIn' , async(req,res) =>{
     try{
     const {username,password}=req.body;//const as will only be declared once per submission
     const customerId= await accountValidation.custLogInCheck(username,password)//check if data is valid
-    console.log(`Customer login attempt for username/email: ${username}, Resulting ID: ${customerId}`);
+    
     if (customerId===-1){//if it doesn't match an existing account or SQL injection
         return res.redirect('/Customer/LogIn?message=Invalid username or password');
     }
@@ -225,7 +225,6 @@ router.post('/SignUp' , async(req,res) =>{//error add
         //No errors so create a new customer with these details
         const hashedPassword = await bcrypt.hash(password, 10);
         const customerId=await sql.newCustomer(username,forename,surname,email,hashedPassword,custSex,custDateOfBirth)
-        console.log(`New customer with id : ${customerId}`)
         //create a cookie that lasts a week with customerID that is protected from client side attacks
         res.cookie('customerID',customerId,{maxAge:7 * 24 * 60 * 60 * 1000, httpOnly:true});
         //redirect to home page
