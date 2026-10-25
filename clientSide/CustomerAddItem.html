@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Add an Item | Eternally Fresh</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/navBar.css">
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                display: flex;
+                min-height: 100vh;
+                flex-direction: column;
+                margin: 0;
+                padding: 2rem;
+                color: #30204f;
+                background:
+                    radial-gradient(ellipse at 12% 8%, rgb(255 255 255 / 90%), transparent 22rem),
+                    radial-gradient(ellipse at 85% 25%, rgb(255 128 215 / 28%), transparent 25rem),
+                    linear-gradient(135deg, #d7f9ff 0%, #f8e3ff 48%, #fff1c8 100%);
+                background-attachment: fixed;
+                font-family: "Trebuchet MS", Arial, sans-serif;
+            }
+            main {
+                width: min(760px, 100%);
+                margin: auto;
+            }
+            .add-item-panel,
+            .method-panel {
+                padding: clamp(1.5rem, 5vw, 2.5rem);
+                border: 2px solid #fff;
+                border-radius: 30px;
+                background: linear-gradient(145deg, rgb(255 255 255 / 92%), rgb(235 249 255 / 88%));
+                box-shadow: 7px 8px 0 #b786e2, 0 0 24px rgb(255 255 255 / 70%);
+            }
+            .method-panel {
+                margin-top: 1rem;
+            }
+            .method-panel[hidden] {
+                display: none;
+            }
+            h1,
+            h2 {
+                color: #542778;
+                text-align: center;
+                text-shadow: 1px 1px 0 #fff;
+            }
+            h1 {
+                margin: 0 0 1.5rem;
+                font-size: clamp(1.6rem, 5vw, 2.2rem);
+            }
+            h2 {
+                margin: 0 0 1.25rem;
+                font-size: clamp(1.3rem, 4vw, 1.7rem);
+            }
+            .method-options {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 1rem;
+            }
+            .method-button,
+            .submit-button {
+                display: flex;
+                min-height: 54px;
+                align-items: center;
+                justify-content: center;
+                padding: 0.8rem 1rem;
+                border: 2px solid #fff;
+                border-radius: 999px;
+                background: linear-gradient(100deg, #ff9bdc, #d7a9ff 55%, #8ceeff);
+                box-shadow: 4px 5px 0 #9b6bc9;
+                color: #39235f;
+                cursor: pointer;
+                font: inherit;
+                font-weight: 700;
+                text-align: center;
+                transition: transform 150ms ease, filter 150ms ease;
+            }
+            .method-button[aria-pressed="true"] {
+                background: linear-gradient(100deg, #ffb4e6, #e2c6ff 55%, #b5f2ff);
+                outline: 3px solid #fff;
+                outline-offset: 3px;
+            }
+            .method-button:hover,
+            .method-button:focus-visible,
+            .submit-button:hover,
+            .submit-button:focus-visible {
+                filter: brightness(1.05);
+                transform: translateY(-2px);
+            }
+            .form-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 1rem;
+            }
+            .field {
+                min-width: 0;
+            }
+            .field-wide {
+                grid-column: 1 / -1;
+            }
+            label {
+                display: block;
+                margin-bottom: 0.4rem;
+                color: #432967;
+                font-weight: 700;
+            }
+            input,
+            select {
+                width: 100%;
+                min-height: 46px;
+                padding: 0.7rem 0.85rem;
+                border: 2px solid #d4b6ef;
+                border-radius: 14px;
+                background: rgb(255 255 255 / 88%);
+                color: #30204f;
+                font: inherit;
+            }
+            input:focus-visible,
+            select:focus-visible {
+                border-color: #8a5bc0;
+                outline: 3px solid rgb(142 223 255 / 65%);
+                outline-offset: 2px;
+            }
+            input[readonly] {
+                background: #f4edff;
+            }
+            input[type="file"] {
+                min-height: auto;
+                padding: 0.55rem;
+            }
+            .image-help {
+                margin: 0.4rem 0 0;
+                color: #287486;
+                font-size: 0.9rem;
+            }
+            .barcode-image-link {
+                display: inline-block;
+                margin: 0 0 1rem;
+                color: #642c91;
+                font-weight: 700;
+            }
+            .barcode-image-link[hidden] {
+                display: none;
+            }
+            .item-preview {
+                display: grid;
+                width: 100%;
+                grid-template-columns: 88px minmax(0, 1fr);
+                align-items: center;
+                gap: 1rem;
+                margin-top: 1.25rem;
+                padding: 0.85rem;
+                border: 2px solid #fff;
+                border-radius: 22px;
+                background: linear-gradient(120deg, #fff 0%, #f8e7ff 52%, #e5fbff 100%);
+                box-shadow: 4px 5px 0 #b786e2;
+                color: #30204f;
+                cursor: pointer;
+                font: inherit;
+                text-align: left;
+                transition: transform 150ms ease, box-shadow 150ms ease;
+            }
+            .item-preview:hover,
+            .item-preview:focus-visible {
+                box-shadow: 5px 7px 0 #9b6bc9;
+                transform: translateY(-2px);
+            }
+            .item-preview img {
+                width: 88px;
+                height: 78px;
+                border: 1px solid #d4b6ef;
+                border-radius: 14px;
+                background: #fff;
+                object-fit: contain;
+            }
+            .item-preview-copy {
+                display: grid;
+                gap: 0.25rem;
+                min-width: 0;
+            }
+            .item-preview-copy strong {
+                overflow-wrap: anywhere;
+                color: #542778;
+                font-size: 1.05rem;
+            }
+            .item-preview-copy span {
+                color: #287486;
+                font-size: 0.92rem;
+            }
+            .food-preview-dialog {
+                width: min(540px, calc(100% - 2rem));
+                max-height: min(85vh, 720px);
+                padding: 1.5rem;
+                overflow: auto;
+                border: 3px solid #fff;
+                border-radius: 28px;
+                background: linear-gradient(145deg, #fff, #f4e5ff 58%, #e4fbff);
+                box-shadow: 0 18px 60px rgb(48 32 79 / 35%);
+                color: #30204f;
+            }
+            .food-preview-dialog::backdrop {
+                background: rgb(48 32 79 / 45%);
+                backdrop-filter: blur(4px);
+            }
+            .food-preview-dialog img {
+                display: block;
+                width: min(100%, 360px);
+                height: 220px;
+                margin: 0 auto 1rem;
+                border: 2px solid #fff;
+                border-radius: 18px;
+                background: #fff;
+                object-fit: contain;
+            }
+            .food-preview-dialog h2 {
+                margin-bottom: 0.5rem;
+            }
+            .food-preview-dialog p {
+                margin: 0.5rem 0;
+            }
+            .food-preview-dialog .submit-button {
+                margin: 1.25rem auto 0;
+            }
+            .barcode-lookup-row {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                align-items: end;
+                gap: 0.75rem;
+            }
+            .barcode-lookup-row .submit-button {
+                min-height: 46px;
+            }
+            .status-message {
+                min-height: 1.5rem;
+                margin: 0.75rem 0;
+                color: #287486;
+                font-weight: 700;
+            }
+            .status-message.error {
+                color: #9a2450;
+            }
+            .form-actions {
+                display: flex;
+                justify-content: center;
+                margin-top: 1.5rem;
+            }
+            .submit-button:disabled {
+                cursor: not-allowed;
+                filter: grayscale(0.5);
+                opacity: 0.65;
+                transform: none;
+            }
+            @media (max-width: 650px) {
+                body {
+                    padding: 1rem;
+                }
+                .method-options {
+                    grid-template-columns: 1fr;
+                }
+                .form-grid {
+                    grid-template-columns: 1fr;
+                }
+                .field-wide {
+                    grid-column: auto;
+                }
+            }
+            @media (max-width: 420px) {
+                .barcode-lookup-row {
+                    grid-template-columns: 1fr;
+                }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .method-button,
+                .submit-button,
+                .item-preview {
+                    transition: none;
+                }
+            }
+        </style>
+        <script src="/navBar.js" defer></script>
+        <script src="/addItem.js" defer></script>
+    </head>
+    <body>
+        <button class="nav-toggle" type="button" aria-label="Open navigation" aria-controls="site-navigation" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="nav-backdrop" data-nav-close hidden></div>
+        <aside class="site-navigation" id="site-navigation" aria-label="Main navigation" aria-hidden="true">
+            <a class="nav-logo" href="/Customer/Home" aria-label="Eternally Fresh home">
+                <img class="nav-logo-image" src="/logo.png" alt="Eternally Fresh">
+                <span>Eternally Fresh</span>
+            </a>
+            <nav>
+                <a href="/Customer/Home">Home</a>
+                <a href="/Customer/EditItems">Edit Items</a>
+                <a href="/Customer/AddItem">Add New Items</a>
+                <a href="/Customer/SearchRecipes">Search Recipes</a>
+                <a href="/Customer/CreateRecipe">Create Recipes</a>
+                <a href="/Customer/LogOut">Logout</a>
+            </nav>
+        </aside>
+        <main>
+            <section class="add-item-panel" aria-labelledby="addItemTitle">
+                <h1 id="addItemTitle">Add a new item</h1>
+                <div class="method-options" role="group" aria-label="Choose how to add food">
+                    <button class="method-button" type="button" data-method="catalog" aria-pressed="false">Choose from foods</button>
+                    <button class="method-button" type="button" data-method="barcode" aria-pressed="false">Look up barcode</button>
+                    <button class="method-button" type="button" data-method="manual" aria-pressed="false">Enter manually</button>
+                </div>
+            </section>
+
+            <section class="method-panel" id="catalogPanel" aria-labelledby="catalogTitle" hidden>
+                <h2 id="catalogTitle">Choose a food</h2>
+                <form id="catalogForm">
+                    <div class="form-grid">
+                        <div class="field field-wide">
+                            <label for="catalogFood">Food</label>
+                            <select id="catalogFood" name="foodID" required>
+                                <option value="">Loading foods...</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="catalogCurrentAmount">Current amount</label>
+                            <input id="catalogCurrentAmount" name="currentAmount" type="number" min="0" step="any" required>
+                        </div>
+                        <div class="field">
+                            <label for="catalogExpiryDate">Expiry date</label>
+                            <input id="catalogExpiryDate" name="expiryDate" type="date" required>
+                        </div>
+                        <div class="field field-wide">
+                            <label for="catalogFoodImage">Food image (optional)</label>
+                            <input id="catalogFoodImage" name="foodImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                            <p class="image-help">JPEG, PNG, WebP, or GIF; up to 5 MB.</p>
+                        </div>
+                    </div>
+                    <button class="item-preview" type="button" data-item-preview="catalog" aria-label="Preview catalog food">
+                        <img src="/logo.png" alt="">
+                        <span class="item-preview-copy">
+                            <strong>Choose a food to preview</strong>
+                            <span>Amount and expiry details will appear here.</span>
+                        </span>
+                    </button>
+                    <p class="status-message" id="catalogStatus" role="status" aria-live="polite"></p>
+                    <div class="form-actions">
+                        <button class="submit-button" type="submit">Add food</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="method-panel" id="manualPanel" aria-labelledby="manualTitle" hidden>
+                <h2 id="manualTitle">Enter food details</h2>
+                <form id="manualForm">
+                    <div class="form-grid">
+                        <div class="field field-wide">
+                            <label for="manualName">Food name</label>
+                            <input id="manualName" name="name" type="text" maxlength="200" required>
+                        </div>
+                        <div class="field">
+                            <label for="manualMaxSize">Maximum amount</label>
+                            <input id="manualMaxSize" name="maxSize" type="number" min="0.01" step="any" required>
+                        </div>
+                        <div class="field">
+                            <label for="manualSizeUnits">Unit (for example, g or L)</label>
+                            <input id="manualSizeUnits" name="sizeUnits" type="text" maxlength="40" required>
+                        </div>
+                        <div class="field">
+                            <label for="manualCurrentAmount">Current amount</label>
+                            <input id="manualCurrentAmount" name="currentAmount" type="number" min="0" step="any" required>
+                        </div>
+                        <div class="field">
+                            <label for="manualExpiryDate">Expiry date</label>
+                            <input id="manualExpiryDate" name="expiryDate" type="date" required>
+                        </div>
+                        <div class="field field-wide">
+                            <label for="manualFoodImage">Food image (optional)</label>
+                            <input id="manualFoodImage" name="foodImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                            <p class="image-help">JPEG, PNG, WebP, or GIF; up to 5 MB.</p>
+                        </div>
+                    </div>
+                    <button class="item-preview" type="button" data-item-preview="manual" aria-label="Preview new food">
+                        <img src="/logo.png" alt="">
+                        <span class="item-preview-copy">
+                            <strong>Your food name</strong>
+                            <span>Amount and expiry details will appear here.</span>
+                        </span>
+                    </button>
+                    <p class="status-message" id="manualStatus" role="status" aria-live="polite"></p>
+                    <div class="form-actions">
+                        <button class="submit-button" type="submit">Add food</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="method-panel" id="barcodePanel" aria-labelledby="barcodeTitle" hidden>
+                <h2 id="barcodeTitle">Look up a barcode</h2>
+                <form id="barcodeForm">
+                    <div class="field barcode-lookup-row">
+                        <div>
+                            <label for="barcodeNumber">Barcode number</label>
+                            <input id="barcodeNumber" type="text" inputmode="numeric" autocomplete="off" required>
+                        </div>
+                        <button class="submit-button" id="lookupBarcode" type="button">Look up</button>
+                    </div>
+                    <p class="status-message" id="barcodeStatus" role="status" aria-live="polite"></p>
+                    <a class="barcode-image-link" id="barcodeImageLink" href="#" target="_blank" rel="noopener noreferrer" hidden>View product image</a>
+                    <div class="form-grid">
+                        <div class="field field-wide product-detail" hidden>
+                            <label for="barcodeName">Food name</label>
+                            <input id="barcodeName" type="text" maxlength="200" disabled required>
+                        </div>
+                        <div class="field product-detail" hidden>
+                            <label for="barcodeMaxSize">Maximum amount</label>
+                            <input id="barcodeMaxSize" type="number" min="0.01" step="any" disabled required>
+                        </div>
+                        <div class="field product-detail" hidden>
+                            <label for="barcodeSizeUnits">Unit</label>
+                            <input id="barcodeSizeUnits" type="text" maxlength="40" disabled required>
+                        </div>
+                        <div class="field">
+                            <label for="barcodeCurrentAmount">Current amount</label>
+                            <input id="barcodeCurrentAmount" type="number" min="0" step="any" required>
+                        </div>
+                        <div class="field">
+                            <label for="barcodeExpiryDate">Expiry date</label>
+                            <input id="barcodeExpiryDate" type="date" required>
+                        </div>
+                        <div class="field field-wide">
+                            <label for="barcodeFoodImage">Food image (optional)</label>
+                            <input id="barcodeFoodImage" name="foodImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                            <p class="image-help">JPEG, PNG, WebP, or GIF; up to 5 MB.</p>
+                        </div>
+                    </div>
+                    <button class="item-preview" type="button" data-item-preview="barcode" aria-label="Preview barcode food">
+                        <img src="/logo.png" alt="">
+                        <span class="item-preview-copy">
+                            <strong>Look up a food to preview</strong>
+                            <span>Amount and expiry details will appear here.</span>
+                        </span>
+                    </button>
+                    <div class="form-actions">
+                        <button class="submit-button" id="addBarcodeItem" type="submit" disabled>Add food</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+        <dialog class="food-preview-dialog" id="foodPreviewDialog" aria-labelledby="foodPreviewTitle">
+            <img src="/logo.png" alt="" id="foodPreviewDialogImage">
+            <h2 id="foodPreviewTitle">Food preview</h2>
+            <p id="foodPreviewAmount"></p>
+            <p id="foodPreviewExpiry"></p>
+            <button class="submit-button" id="closeFoodPreview" type="button">Close preview</button>
+        </dialog>
+    </body>
+</html>

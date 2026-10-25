@@ -8,6 +8,7 @@ require('dotenv').config();
 
 app.use(express.static(path.join(__dirname, 'clientSide')));//allows server to serve the html pages without unneeded additions to the URL
 app.use(express.urlencoded({ extended: true })); // ensures form submissions are readable and available
+app.use(express.json({ limit: '8mb' }));
 app.use(cookieParser());//allows server to read cookies
 
 const modRoutes = require("./routers/modRouter")//router for all employee pages

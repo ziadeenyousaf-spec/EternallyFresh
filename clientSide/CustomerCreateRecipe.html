@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Create a Recipe | Eternally Fresh</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/navBar.css">
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                padding: 2rem;
+                color: #30204f;
+                background:
+                    radial-gradient(ellipse at 12% 8%, rgb(255 255 255 / 90%), transparent 22rem),
+                    radial-gradient(ellipse at 85% 25%, rgb(255 128 215 / 28%), transparent 25rem),
+                    linear-gradient(135deg, #d7f9ff 0%, #f8e3ff 48%, #fff1c8 100%);
+                background-attachment: fixed;
+                font-family: "Trebuchet MS", Arial, sans-serif;
+            }
+            main {
+                display: grid;
+                width: min(1100px, 100%);
+                grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+                align-items: start;
+                gap: 1.5rem;
+                margin: 1rem auto;
+            }
+            .recipe-panel,
+            .preview-panel {
+                min-width: 0;
+                padding: clamp(1.25rem, 4vw, 2rem);
+                border: 2px solid #fff;
+                border-radius: 28px;
+                background: linear-gradient(145deg, rgb(255 255 255 / 92%), rgb(235 249 255 / 88%));
+                box-shadow: 6px 7px 0 #b786e2, 0 0 20px rgb(255 255 255 / 65%);
+            }
+            h1,
+            h2 {
+                margin-top: 0;
+                color: #542778;
+                text-shadow: 1px 1px 0 #fff;
+            }
+            h1 {
+                font-size: clamp(1.5rem, 4vw, 2rem);
+            }
+            h2 {
+                font-size: 1.35rem;
+            }
+            .form-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 1rem;
+            }
+            .field {
+                min-width: 0;
+            }
+            .field-wide {
+                grid-column: 1 / -1;
+            }
+            label {
+                display: block;
+                margin-bottom: 0.4rem;
+                color: #432967;
+                font-weight: 700;
+            }
+            input,
+            select,
+            textarea {
+                width: 100%;
+                min-height: 44px;
+                padding: 0.65rem 0.8rem;
+                border: 2px solid #d4b6ef;
+                border-radius: 14px;
+                background: rgb(255 255 255 / 88%);
+                color: #30204f;
+                font: inherit;
+            }
+            textarea {
+                min-height: 150px;
+                resize: vertical;
+            }
+            input:focus-visible,
+            select:focus-visible,
+            textarea:focus-visible,
+            button:focus-visible {
+                border-color: #8a5bc0;
+                outline: 3px solid rgb(142 223 255 / 65%);
+                outline-offset: 2px;
+            }
+            input[type="file"] {
+                min-height: auto;
+                padding: 0.5rem;
+            }
+            .field-help,
+            .recipe-status {
+                margin: 0.5rem 0 0;
+                color: #287486;
+                font-size: 0.92rem;
+            }
+            .recipe-status {
+                min-height: 1.5rem;
+                font-weight: 700;
+            }
+            .recipe-status.error {
+                color: #9a2450;
+            }
+            .ingredient-row {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) minmax(190px, 0.9fr) auto;
+                align-items: end;
+                gap: 0.65rem;
+                margin-bottom: 0.75rem;
+            }
+            .ingredient-quantity {
+                display: grid;
+                grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+                gap: 0.5rem;
+            }
+            .ingredient-row label {
+                display: block;
+                margin-bottom: 0.35rem;
+                color: #432967;
+                font-size: 0.9rem;
+                font-weight: 700;
+            }
+            .ingredient-measurement {
+                display: flex;
+                min-height: 44px;
+                align-items: center;
+                padding: 0.65rem 0.8rem;
+                border: 2px solid #d4b6ef;
+                border-radius: 14px;
+                background: #f4edff;
+                color: #542778;
+            }
+            .remove-ingredient,
+            .secondary-button,
+            .submit-button {
+                min-height: 44px;
+                padding: 0.6rem 0.9rem;
+                border: 2px solid #fff;
+                border-radius: 999px;
+                background: linear-gradient(100deg, #ff9bdc, #d7a9ff 55%, #8ceeff);
+                box-shadow: 3px 4px 0 #9b6bc9;
+                color: #39235f;
+                cursor: pointer;
+                font: inherit;
+                font-weight: 700;
+            }
+            .remove-ingredient {
+                width: 44px;
+                padding: 0;
+                font-size: 1.3rem;
+            }
+            .secondary-button {
+                background: linear-gradient(100deg, #e6f7ff, #d8d0ff);
+            }
+            .form-actions {
+                display: flex;
+                justify-content: center;
+                margin-top: 1rem;
+            }
+            .submit-button:disabled {
+                cursor: wait;
+                opacity: 0.65;
+            }
+            .preview-card {
+                display: block;
+                width: 100%;
+                padding: 1rem;
+                border: 2px solid #fff;
+                border-radius: 22px;
+                background: linear-gradient(145deg, #fff, #eaf9ff 55%, #f8e3ff);
+                box-shadow: 4px 5px 0 #b786e2;
+                color: inherit;
+                cursor: pointer;
+                font: inherit;
+                text-align: left;
+            }
+            .preview-card:hover {
+                filter: brightness(1.04);
+                transform: translateY(-2px);
+            }
+            .preview-card img {
+                display: block;
+                width: 100%;
+                height: 200px;
+                margin-bottom: 0.75rem;
+                border: 2px solid #fff;
+                border-radius: 16px;
+                background: linear-gradient(135deg, #d9faff, #ffe1f5);
+                object-fit: contain;
+            }
+            .preview-card h3 {
+                margin: 0.5rem 0;
+                color: #642c91;
+                font-size: 1.2rem;
+                overflow-wrap: anywhere;
+            }
+            .preview-card p {
+                margin: 0.5rem 0 0;
+                color: #287486;
+                overflow-wrap: anywhere;
+            }
+            .preview-hint {
+                margin-bottom: 0;
+                color: #642c91;
+                font-size: 0.9rem;
+                text-align: center;
+            }
+            #recipePreviewDialog {
+                width: min(700px, calc(100% - 2rem));
+                max-height: calc(100% - 2rem);
+                padding: clamp(1.25rem, 4vw, 2rem);
+                overflow-y: auto;
+                border: 2px solid #fff;
+                border-radius: 28px;
+                background: linear-gradient(145deg, #fff, #eaf9ff 55%, #f8e3ff);
+                box-shadow: 7px 8px 0 #b786e2, 0 0 24px rgb(255 255 255 / 80%);
+                color: #30204f;
+                font: inherit;
+            }
+            #recipePreviewDialog::backdrop {
+                background: rgb(62 35 89 / 48%);
+                backdrop-filter: blur(3px);
+            }
+            #recipePreviewDialog h2 {
+                color: #542778;
+            }
+            #previewDialogImage {
+                display: block;
+                width: 100%;
+                max-height: 320px;
+                margin: 1rem 0;
+                border: 2px solid #fff;
+                border-radius: 18px;
+                background: linear-gradient(135deg, #d9faff, #ffe1f5);
+                object-fit: contain;
+            }
+            #previewDialogInstructions {
+                line-height: 1.65;
+                white-space: pre-line;
+            }
+            #closePreview {
+                float: right;
+            }
+            @media (max-width: 760px) {
+                body {
+                    padding: 1rem;
+                }
+                main {
+                    grid-template-columns: 1fr;
+                    margin-top: 1.5rem;
+                }
+                .preview-panel {
+                    grid-row: 1;
+                }
+            }
+            @media (max-width: 520px) {
+                .form-grid {
+                    grid-template-columns: 1fr;
+                }
+                .field-wide {
+                    grid-column: auto;
+                }
+                .ingredient-row {
+                    grid-template-columns: minmax(0, 1fr) auto;
+                    gap: 0.4rem;
+                }
+                .ingredient-select-field {
+                    grid-column: 1 / -1;
+                }
+                .ingredient-quantity {
+                    grid-column: 1;
+                    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+                }
+                .ingredient-unit-field {
+                    grid-column: 1 / -1;
+                }
+                .ingredient-row input,
+                .ingredient-row select,
+                .ingredient-measurement {
+                    padding: 0.55rem;
+                }
+            }
+        </style>
+        <script src="/createRecipe.js" defer></script>
+        <script src="/navBar.js" defer></script>
+    </head>
+    <body>
+        <button class="nav-toggle" type="button" aria-label="Open navigation" aria-controls="site-navigation" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="nav-backdrop" data-nav-close hidden></div>
+        <aside class="site-navigation" id="site-navigation" aria-label="Main navigation" aria-hidden="true">
+            <a class="nav-logo" href="/Customer/Home" aria-label="Eternally Fresh home">
+                <img class="nav-logo-image" src="/logo.png" alt="Eternally Fresh">
+                <span>Eternally Fresh</span>
+            </a>
+            <nav>
+                <a href="/Customer/Home">Home</a>
+                <a href="/Customer/EditItems">Edit Items</a>
+                <a href="/Customer/AddItem">Add New Items</a>
+                <a href="/Customer/SearchRecipes">Search Recipes</a>
+                <a href="/Customer/CreateRecipe">Create Recipes</a>
+                <a href="/Customer/LogOut">Logout</a>
+            </nav>
+        </aside>
+        <main>
+            <section class="recipe-panel" aria-labelledby="createRecipeTitle">
+                <h1 id="createRecipeTitle">Create a recipe</h1>
+                <form id="createRecipeForm">
+                    <div class="form-grid">
+                        <div class="field field-wide">
+                            <label for="recipeName">Recipe name</label>
+                            <input id="recipeName" name="name" type="text" maxlength="200" required>
+                        </div>
+                        <div class="field">
+                            <label for="cookingTime">Cooking time (minutes)</label>
+                            <input id="cookingTime" name="cookingTime" type="number" min="1" step="1" required>
+                        </div>
+                        <div class="field">
+                            <label for="servingSize">Servings</label>
+                            <input id="servingSize" name="servingSize" type="number" min="1" step="1" value="1">
+                        </div>
+                        <div class="field field-wide">
+                            <label for="recipeImage">Recipe image (optional)</label>
+                            <input id="recipeImage" name="recipeImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+                            <p class="field-help">JPEG, PNG, WebP, or GIF; up to 5 MB.</p>
+                        </div>
+                        <div class="field field-wide">
+                            <label>Ingredients</label>
+                            <p class="field-help">Choose an ingredient and enter the amount and measurement unit to use.</p>
+                            <div id="ingredientRows"></div>
+                            <button class="secondary-button" id="addIngredient" type="button">Add ingredient</button>
+                        </div>
+                        <div class="field field-wide">
+                            <label for="instructions">Instructions</label>
+                            <textarea id="instructions" name="instructions" required placeholder="Write each step on a new line"></textarea>
+                        </div>
+                    </div>
+                    <p class="recipe-status" id="createRecipeStatus" role="status" aria-live="polite"></p>
+                    <div class="form-actions">
+                        <button class="submit-button" id="saveRecipe" type="submit">Save recipe</button>
+                    </div>
+                </form>
+            </section>
+            <aside class="preview-panel" aria-labelledby="recipePreviewHeading">
+                <h2 id="recipePreviewHeading">Recipe preview</h2>
+                <button class="preview-card" id="recipePreview" type="button" aria-haspopup="dialog" aria-label="Open full recipe preview">
+                    <img id="previewImage" src="/logo.png" alt="">
+                    <h3 id="previewName">Your recipe name</h3>
+                    <p id="previewTime">Cooking time will appear here</p>
+                    <p id="previewIngredients">Add ingredients to see them here</p>
+                </button>
+                <p class="preview-hint">Select the card to preview the full recipe.</p>
+            </aside>
+        </main>
+        <dialog id="recipePreviewDialog" aria-labelledby="previewDialogTitle">
+            <button class="secondary-button" id="closePreview" type="button">Close</button>
+            <h2 id="previewDialogTitle">Your recipe</h2>
+            <p id="previewDialogTime"></p>
+            <img id="previewDialogImage" src="/logo.png" alt="">
+            <h3>Ingredients</h3>
+            <ul id="previewDialogIngredients"></ul>
+            <h3>Instructions</h3>
+            <p id="previewDialogInstructions"></p>
+        </dialog>
+    </body>
+</html>

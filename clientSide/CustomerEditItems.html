@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Home</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/navBar.css">
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                padding: 2rem;
+                font-family: "Trebuchet MS", Arial, sans-serif;
+                color: #30204f;
+                background:
+                    radial-gradient(ellipse at 12% 8%, rgb(255 255 255 / 90%), transparent 22rem),
+                    radial-gradient(ellipse at 85% 25%, rgb(255 128 215 / 28%), transparent 25rem),
+                    linear-gradient(135deg, #d7f9ff 0%, #f8e3ff 48%, #fff1c8 100%);
+                background-attachment: fixed;
+            }
+            main {
+                max-width: 1100px;
+                margin: 0 auto;
+            }
+            h1 {
+                display: table;
+                margin: 1.75rem 0 1rem;
+                padding: 0.45rem 1.1rem;
+                border: 2px solid #fff;
+                border-radius: 999px;
+                background: linear-gradient(110deg, #ff9bdc, #d7a9ff 55%, #8ceeff);
+                box-shadow: 4px 5px 0 #9b6bc9, 0 0 18px rgb(255 255 255 / 80%);
+                color: #39235f;
+                font-size: clamp(1.35rem, 4vw, 2rem);
+                text-shadow: 1px 1px 0 #fff;
+            }
+            #soonToExpireFoods,
+            #recommendedRecipes {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 1rem;
+            }
+            #soonToExpireFoods > div,
+            #recommendedRecipes > div {
+                position: relative;
+                min-width: 0;
+                padding: 1rem;
+                border: 2px solid #fff;
+                border-radius: 22px;
+                background: linear-gradient(145deg, rgb(255 255 255 / 92%), rgb(235 249 255 / 88%));
+                box-shadow: 5px 6px 0 #b786e2, 0 0 18px rgb(255 255 255 / 65%);
+                text-align: center;
+            }
+            .food-edit-button {
+                position: absolute;
+                z-index: 1;
+                top: 0.75rem;
+                right: 0.75rem;
+                display: grid;
+                width: 42px;
+                height: 42px;
+                place-items: center;
+                border: 2px solid #fff;
+                border-radius: 14px;
+                background: linear-gradient(145deg, #ff8dd8, #9f82ff 58%, #58dfff);
+                box-shadow: 3px 4px 0 #7952b3, 0 0 14px rgb(255 255 255 / 80%);
+                color: #fff;
+                cursor: pointer;
+            }
+            .food-edit-button:hover,
+            .food-edit-button:focus-visible {
+                filter: brightness(1.08);
+                transform: translateY(-1px);
+            }
+            .food-edit-button svg {
+                width: 20px;
+                height: 20px;
+                fill: currentColor;
+            }
+            #soonToExpireFoods img,
+            #recommendedRecipes img {
+                display: block;
+                width: 100%;
+                height: 210px;
+                margin-bottom: 0.75rem;
+                border: 2px solid #fff;
+                border-radius: 16px;
+                background: linear-gradient(135deg, #d9faff, #ffe1f5);
+                object-fit: contain;
+                object-position: center;
+            }
+            #soonToExpireFoods p:first-of-type,
+            #recommendedRecipes p:first-of-type {
+                color: #642c91;
+                font-size: 1.1rem;
+                font-weight: 700;
+                overflow-wrap: anywhere;
+            }
+            #soonToExpireFoods p,
+            #recommendedRecipes p {
+                margin: 0.5rem 0 0;
+            }
+            #soonToExpireFoods p:last-child,
+            #recommendedRecipes p:last-child {
+                color: #287486;
+            }
+            #editFoodDialog {
+                width: min(460px, calc(100% - 2rem));
+                max-height: calc(100% - 2rem);
+                padding: 1.5rem;
+                overflow-y: auto;
+                border: 2px solid #fff;
+                border-radius: 26px;
+                background: linear-gradient(145deg, #fff, #eaf9ff 55%, #f8e3ff);
+                box-shadow: 7px 8px 0 #b786e2, 0 0 24px rgb(255 255 255 / 80%);
+                color: #30204f;
+                font: inherit;
+            }
+            #editFoodDialog::backdrop {
+                background: rgb(62 35 89 / 48%);
+                backdrop-filter: blur(3px);
+            }
+            #editFoodDialog h2 {
+                margin-top: 0;
+                color: #542778;
+            }
+            #editFoodDialog label {
+                display: block;
+                margin: 1rem 0 0.4rem;
+                color: #432967;
+                font-weight: 700;
+            }
+            #editFoodDialog input,
+            #editFoodDialog select {
+                width: 100%;
+                min-height: 44px;
+                padding: 0.65rem 0.8rem;
+                border: 2px solid #d4b6ef;
+                border-radius: 14px;
+                background: rgb(255 255 255 / 85%);
+                color: #30204f;
+                font: inherit;
+            }
+            #editFoodDialog input:focus-visible,
+            #editFoodDialog select:focus-visible {
+                outline: 3px solid rgb(142 223 255 / 65%);
+                outline-offset: 2px;
+            }
+            #editAmountResult {
+                min-height: 1.4rem;
+                margin: 0.55rem 0 0;
+                color: #287486;
+                font-size: 0.92rem;
+            }
+            .edit-dialog-actions {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+                margin-top: 1.5rem;
+            }
+            .edit-dialog-actions button {
+                min-height: 44px;
+                padding: 0.65rem 1rem;
+                border: 2px solid #fff;
+                border-radius: 999px;
+                background: linear-gradient(100deg, #ff9bdc, #d7a9ff 55%, #8ceeff);
+                box-shadow: 3px 4px 0 #9b6bc9;
+                color: #39235f;
+                cursor: pointer;
+                font: inherit;
+                font-weight: 700;
+            }
+            .edit-dialog-actions button[type="button"] {
+                background: linear-gradient(100deg, #e6f7ff, #d8d0ff);
+            }
+            #editFoodStatus {
+                min-height: 1.5rem;
+                margin: 0.75rem 0 0;
+                color: #9a2450;
+                font-weight: 700;
+            }
+            @media (max-width: 650px) {
+                body {
+                    padding: 1rem;
+                }
+                #soonToExpireFoods,
+                #recommendedRecipes {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+        <script src="/loadEditItems.js" defer></script>
+        <script src="/navBar.js" defer></script>
+    </head>
+    <body>
+        <button class="nav-toggle" type="button" aria-label="Open navigation" aria-controls="site-navigation" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="nav-backdrop" data-nav-close hidden></div>
+        <aside class="site-navigation" id="site-navigation" aria-label="Main navigation" aria-hidden="true">
+            <a class="nav-logo" href="/Customer/Home" aria-label="Eternally Fresh home">
+                <img class="nav-logo-image" src="/logo.png" alt="Eternally Fresh">
+                <span>Eternally Fresh</span>
+            </a>
+            <nav>
+                <a href="/Customer/Home">Home</a>
+                <a href="/Customer/EditItems">Edit Items</a>
+                <a href="/Customer/AddItem">Add New Items</a>
+                <a href="/Customer/SearchRecipes">Search Recipes</a>
+                <a href="/Customer/CreateRecipe">Create Recipes</a>
+                <a href="/Customer/LogOut">Logout</a>
+            </nav>
+        </aside>
+        <main>
+            <h1>Food in order of which one is going to expire first</h1>
+            <p id="itemsStatus" role="status" aria-live="polite"></p>
+            <div id="soonToExpireFoods">
+                
+            </div>
+           
+        </main>
+        <dialog id="editFoodDialog" aria-labelledby="editFoodTitle">
+            <form id="editFoodForm">
+                <h2 id="editFoodTitle">Edit item details</h2>
+                <label for="editAmountMode">Amount entry method</label>
+                <select id="editAmountMode">
+                    <option value="amount">Enter amount remaining</option>
+                    <option value="maxSizePercent">Set percentage of max size remaining</option>
+                    <option value="currentAmountPercent">Use percentage of current amount</option>
+                </select>
+                <label for="editCurrSize">Amount remaining</label>
+                <input id="editCurrSize" type="number" min="0" step="any" required>
+                <p id="editAmountResult" aria-live="polite"></p>
+                <label for="editExpiryDate">Expiry date</label>
+                <input id="editExpiryDate" type="date" required>
+                <p id="editFoodStatus" role="alert" aria-live="assertive"></p>
+                <div class="edit-dialog-actions">
+                    <button type="button" id="cancelFoodEdit">Cancel</button>
+                    <button type="submit">Save changes</button>
+                </div>
+            </form>
+        </dialog>
+    </body>
+</html>

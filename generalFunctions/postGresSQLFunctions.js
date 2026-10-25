@@ -82,4 +82,32 @@ async function hardCodedQuery(query) {
     }
 }
 
-module.exports = { newCustomer, conditionalSelect, getAllFromSingleRow, updateRowValue, selectAllFromTable, hardCodedQuery };
+async function parameterizedQuery(query, values = []) {
+    try {
+        return await pool.query(query, values);
+    } catch (err) {
+        console.error('Error executing parameterized query:', err);
+        throw err;
+    }
+}
+
+async function withTransaction(callback) {
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        const result = await callback(client);
+        await client.query('COMMIT');
+        return result;
+    } catch (error) {
+        try {
+            await client.query('ROLLBACK');
+        } catch (rollbackError) {
+            console.error('Error rolling back database transaction:', rollbackError);
+        }
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
+module.exports = { newCustomer, conditionalSelect, getAllFromSingleRow, updateRowValue, selectAllFromTable, hardCodedQuery, parameterizedQuery, withTransaction };

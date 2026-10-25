@@ -1,8 +1,24 @@
+function getFoodPictureDataUrl(base64) {
+    const signature = atob(base64.slice(0, 32));
+    if (signature.startsWith('GIF87a') || signature.startsWith('GIF89a')) {
+        return `data:image/gif;base64,${base64}`;
+    }
+    if (signature.startsWith('\x89PNG\r\n\x1a\n')) {
+        return `data:image/png;base64,${base64}`;
+    }
+    if (signature.startsWith('RIFF') && signature.slice(8, 12) === 'WEBP') {
+        return `data:image/webp;base64,${base64}`;
+    }
+    return `data:image/jpeg;base64,${base64}`;
+}
+
 async function loadSoonExpiringProducts() {
     let info = await fetch(`/Customer/getSoonExpiringProducts/`);
     let food = await info.json();
     food.forEach((item,index) => {
-        document.getElementById(`foodPic${index + 1}`).src = `data:image/jpeg;base64,${item.foodPic}`;
+        if (item.foodPic) {
+            document.getElementById(`foodPic${index + 1}`).src = getFoodPictureDataUrl(item.foodPic);
+        }
         document.getElementById(`foodName${index + 1}`).textContent = item.name;
         //calculate the amount of time until expiry and display it
         let expiryDate = new Date(item.expiryDate);
