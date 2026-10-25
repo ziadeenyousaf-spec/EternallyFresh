@@ -78,18 +78,86 @@ router.get('/Home',(req,res) => {
     res.sendFile(path.join(__dirname,"../clientSide","CustomerHome.html"));
 });
 
-router.get('/loadSoonExpiringProducts', async (req, res) => {
+router.get('/getSoonExpiringProducts/', async (req, res) => {
     try{
-        sql.hardCodedQuery('SELECT * FROM "Product" WHERE "expiryDate" < NOW() + INTERVAL \'7 days\' ORDER BY "expiryDate" DESC', res);
+        const custId = req.cookies.customerID;
+        let result = await sql.hardCodedQuery(`
+    SELECT
+        f.name,
+        encode(fp."foodPic", 'base64') AS "foodPic",
+        fc."expiryDate"
+    FROM "food2Cust" AS fc
+    JOIN "Food" AS f
+        ON fc."foodID" = f."foodID"
+    LEFT JOIN "foodPicture" AS fp
+        ON f."foodID" = fp."foodID"
+    WHERE fc."custID" = ${custId}
+        AND fc."expiryDate" >= CURRENT_DATE
+    ORDER BY fc."expiryDate" ASC
+    LIMIT 3;`, );
+            res.json(result);
     } catch (err) {
         console.error('Error loading soon expiring products:', err);
         res.status(500).send('Internal Server Error');
     }
 });
 
+
+
 router.get('/loadRecommendedRecipes', async (req, res) => {
     try{
-        sql.hardCodedQuery('SELECT * FROM "Recipe" ORDER BY "popularity" DESC LIMIT 5', res);
+        //fetch food top 10 items that are soon to expire for the customer
+        let custId = req.cookies.customerID;
+        let soonExpiringFoods = await sql.hardCodedQuery(`
+    SELECT
+        f."foodID",
+        fc."expiryDate",
+        fc."currSize",
+        f."maxSize"
+    FROM "food2Cust" AS fc
+    JOIN "Food" AS f
+        ON fc."foodID" = f."foodID"
+    WHERE fc."custID" = ${custId}
+        AND fc."expiryDate" >= CURRENT_DATE
+    ORDER BY fc."expiryDate" ASC
+    LIMIT 10;`, ); 
+        //give them points based on how close they are to expiring and how many they have
+        let foodScores= Array.from({length: soonExpiringFoods.length}, () => [0, 0]); //array of arrays with foodID and score
+        soonExpiringFoods.forEach((food, index) => {
+            let daysUntilExpiry = (new Date(food.expiryDate) - new Date()) / (1000 * 60 * 60 * 24);
+            let score = (10-daysUntilExpiry) * food.currSize / food.maxSize;
+            foodScores[index] = [food.foodID, score];
+        });
+        //then get the top 3 recipes that use the most of those ingredients
+        let recipesToScore = await sql.hardCodedQuery(`SELECT r."recipeID",r."foodIDs" FROM "Recipe" AS r;`, );
+        let recipeScores = Array.from({length: recipesToScore.length}, () => [0, 0]); //array of arrays with recipeID and score
+        recipeScores = await recipeScores
+        recipesToScore.forEach((recipe, index) => {
+            let score = 0;
+            let foodIDs = recipe.foodIDs
+            foodScores.forEach((food) => {
+                if (foodIDs.includes(food[0])) {
+                    score += food[1];
+                }
+            });
+            recipeScores[index] = [recipe.recipeID, score];
+        });
+        //sort the recipes by score and get the top 3
+        recipeScores.sort((a, b) => b[1] - a[1]);
+        let top3Recipes = recipeScores.slice(0, 3).map((recipe) => recipe[0]);
+        //return the recipe name, picture and time to make of those top 3 recipes
+        let result = await sql.hardCodedQuery(`
+    SELECT
+        r.name,
+        encode(rp."recipePic", 'base64') AS "recipePic",
+        r."cookingTime"
+    FROM "Recipe" AS r
+    LEFT JOIN "recipeImage" AS rp
+        ON r."recipeID" = rp."recipeID"
+    WHERE r."recipeID" IN (
+        ${top3Recipes.join(',')}
+    );`, );      
+        res.json(result);
     } catch (err) {
         console.error('Error loading recommended recipes:', err);
         res.status(500).send('Internal Server Error');
